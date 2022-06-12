@@ -1,0 +1,50 @@
+int mod=1003;
+pair<int,int> evalute(char ch,pair<int,int> lhs,pair<int,int> rhs){
+    int tways=0,fways=0;
+    if(ch=='|'){
+        tways=(tways+((lhs.first*rhs.first)%mod))%mod;
+        tways=(tways+((lhs.first*rhs.second)%mod))%mod;
+        tways=(tways+((lhs.second*rhs.first)%mod))%mod;
+        fways=(fways+((lhs.second*rhs.second)%mod))%mod;
+    }
+    if(ch=='&'){
+      tways=(tways+((lhs.first*rhs.first)%mod))%mod;
+        fways=(fways+((lhs.first*rhs.second)%mod))%mod;
+        fways=(fways+((lhs.second*rhs.first)%mod))%mod;
+        fways=(fways+((lhs.second*rhs.second)%mod))%mod;
+    }
+    if(ch=='^'){
+       fways=(fways+((lhs.first*rhs.first)%mod))%mod;
+        tways=(tways+((lhs.first*rhs.second)%mod))%mod;
+        tways=(tways+((lhs.second*rhs.first)%mod))%mod;
+        fways=(fways+((lhs.second*rhs.second)%mod))%mod;
+    }
+    return make_pair(tways,fways);
+}
+
+pair<int,int> countWays_(string S,int si,int E,   vector<vector<pair<int,int>>> &dp){
+    for(int gap=0;gap<=E;gap+=2){
+     for(int s=0,e=gap;e<=E;s+=2,e+=2)   {
+            if(s==e){
+              int tways=(S[s]=='T')?1:0;
+              int fways=(S[s]=='F')?1:0;
+               dp[s][e]= make_pair(tways,fways);
+         continue;
+    }
+    int tways=0,fways=0;
+    for(int cut=s+1;cut<e;cut+=2){
+        pair<int,int> lhs=dp[s][cut-1];
+        pair<int,int> rhs=dp[cut+1][e];
+        pair<int,int> count=evalute(S[cut],lhs,rhs);
+        tways=(tways+count.first)%mod;
+        fways=(fways+count.second)%mod;
+    }
+     dp[s][e]=make_pair(tways,fways);}
+    }
+    return dp[si][E];
+}
+    int countWays(int N, string S){
+        vector<vector<pair<int,int>>> dp(N,vector<pair<int,int>>(N,make_pair(0,0)));
+         pair<int,int> p=  countWays_(S,0,N-1,dp);
+         return p.first;
+    }
