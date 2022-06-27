@@ -1,0 +1,33 @@
+class Solution 
+{
+    public:
+    static bool compareJob(Job i1, Job i2)
+{
+    return (i1.profit > i2.profit);
+}
+
+
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        sort(arr, arr + n, compareJob);
+        int maxrange=0;
+        for(int i=0;i<n;i++){
+            maxrange=max(maxrange,arr[i].dead);
+        }
+        vector<int> dp(maxrange+1,-1);
+        int maxsum=0,jobs=0;
+        for(int i=0;i<n;i++){
+            int j=arr[i].dead;
+            while(j>0 && dp[j]!=-1){
+                j--;
+            }
+            if(j==0){
+                   continue;
+            }
+            dp[j]=arr[i].id;
+            maxsum+=arr[i].profit;
+            jobs++;
+        }
+        return {jobs,maxsum};
+    } 
+};
