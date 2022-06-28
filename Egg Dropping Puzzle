@@ -1,0 +1,37 @@
+int eggDrop_(int e,int k,vector<vector<int>> &dp){
+         if(e==1){
+            return k;
+        }
+        if(k==0 || k==1){
+            return k;
+        }
+        if(dp[e][k]!=-1){
+            return dp[e][k];
+        }
+      int minattempt=1e9;
+      for(int f=1;f<=k;f++){
+          int B,NB;
+          if(dp[e-1][f-1]!=-1){
+              B= dp[e-1][f-1];
+          }
+          else{
+              B=eggDrop_(e-1,f-1,dp);
+              dp[e-1][f-1]=B;
+          }
+           if(dp[e][k-f]!=-1){
+               NB= dp[e][k-f];
+           }
+           else{
+               NB=eggDrop_(e,k-f,dp);
+               dp[e][k-f]=NB;
+           }
+           int temp=1+max(B,NB);
+          minattempt=min(minattempt,temp);
+      }
+      return dp[e][k]=minattempt;
+    }
+    int eggDrop(int e, int k) 
+    {
+        vector<vector<int>> dp(e+1,vector<int>(k+1,-1));
+       return eggDrop_(e,k,dp);
+    }
